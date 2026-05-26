@@ -5,7 +5,7 @@ A full-stack task management app with a React frontend and .NET Core minimal API
 
 ## Setup and running 
 
-## Prerequisites
+### Prerequisites
 
 - [Node.js](https://nodejs.org/) 20+ and [pnpm](https://pnpm.io/)
 - [.NET SDK 10](https://dotnet.microsoft.com/download)
@@ -19,7 +19,7 @@ cd backend/TaskManagerAPI
 dotnet run
 ```
 
-The API starts on `http://localhost:5000`. Swagger UI is at `http://localhost:5000/swagger`.
+The API starts on `http://localhost:5000`.
 
 ### 2. Frontend
 
@@ -88,7 +88,7 @@ frontend/src/
 |---|---|
 | ASP.NET Core 10 (Minimal API) | HTTP layer |
 | Entity Framework Core (in-memory) | Data access |
-| Swagger / Swashbuckle | Auto-generated API docs |
+ 
 | xUnit + WebApplicationFactory | Integration tests against a real in-process server |
 
 **Structure**
@@ -115,7 +115,6 @@ backend/TaskManager.Tests/
 | `PUT` | `/tasks/{id}` | Update title, description, and/or completion status |
 | `DELETE` | `/tasks/{id}` | Delete a task |
 
-Swagger UI is available at `http://localhost:5000/swagger` when running in development.
 
 ---
 
