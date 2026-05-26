@@ -1,6 +1,6 @@
 import './App.css'
 import AddTask from './components/AddTask'
-import ListItem from './components/ListItem'
+import TaskItem from './components/TaskItem'
 import { useTasks } from './context/TaskContext'
 
 function App() {
@@ -32,7 +32,7 @@ function App() {
       ) : (
         <ul role="list" className="space-y-4">
           {tasks.map((task: any) => (
-            <ListItem key={task.id} task={task} />
+            <TaskItem key={task.id} task={task} />
           ))}
         </ul>
       )}

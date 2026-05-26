@@ -5,8 +5,8 @@ type Task = {
   id: string
   title: string
   description?: string
-  completed?: boolean
-  createdAt?: string
+  isComplete: boolean
+  createdAt: string
 }
 
 type TaskContextValue = {
@@ -14,7 +14,8 @@ type TaskContextValue = {
   loading: boolean
   error: Error | null
   refresh: () => Promise<void>
-  createTask: (task: { title: string; description: string }) => Promise<void>
+  createTask: (task: { title: string; description?: string }) => Promise<void>
+  updateTask: (id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>) => Promise<void>
   deleteTask: (id: string) => Promise<void>
 }
 
@@ -43,12 +44,31 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     void fetchTasks()
   }, [])
 
-  const createTask = async ({ title, description }: { title: string; description: string }) => {
+  const createTask = async ({ title, description }: { title: string; description?: string }) => {
     try {
-      const newTask = await api.post<Task>('/api/tasks', { title, description })
+      const newTask = await api.post<Task>('/api/tasks', { title, ...(description ? { description } : {}) })
       setTasks((prev) => [newTask, ...prev])
     } catch (err: any) {
       setError(err)
+      throw err
+    }
+  }
+
+  const updateTask = async (
+    id: string,
+    updates: Partial<Omit<Task, 'id' | 'createdAt'>>,
+  ) => {
+    const previousTasks = tasks
+    setTasks((prev) =>
+      prev.map((task) =>
+        String(task.id) === String(id) ? { ...task, ...updates } : task,
+      ),
+    )
+    try {
+      await api.put<Task>(`/api/tasks/${id}`, updates)
+    } catch (err: any) {
+      setError(err)
+      setTasks(previousTasks)
       throw err
     }
   }
@@ -71,6 +91,7 @@ export const TaskProvider = ({ children }: { children: React.ReactNode }) => {
     error,
     refresh: fetchTasks,
     createTask,
+    updateTask,
     deleteTask,
   }
 
