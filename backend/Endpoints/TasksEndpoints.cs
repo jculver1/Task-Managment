@@ -24,5 +24,16 @@ public static class TasksEndpoints
             return Results.Ok(items);
         })
         .WithSummary("List all tasks");
+
+        group.MapPost("/", async (TaskItem task, AppDbContext db) =>
+        {
+            task.CreatedAt = DateTime.UtcNow;
+            db.Tasks.Add(task);
+            await db.SaveChangesAsync();
+
+            return Results.Created($"/tasks/{task.Id}", task);
+        })
+        .WithSummary("Create a new task");
+
     }
 }

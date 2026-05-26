@@ -71,3 +71,16 @@ export default defineConfig([
   },
 ])
 ```
+
+## Local API placeholder
+
+- **Env file:** Copy `.env.example` to `.env` or create `.env.local` and set `VITE_API_URL` to your backend base URL and optionally `VITE_API_PROXY` for dev proxying.
+- **Dev proxy:** During `vite` dev the app proxies requests starting with `/api` to `VITE_API_PROXY` (see `vite.config.ts`).
+- **Client usage:** Read the API base in code with `import.meta.env.VITE_API_URL`, for example:
+
+```ts
+const apiBase = import.meta.env.VITE_API_URL || ''
+fetch(`${apiBase}/users`) // or use `/api/users` to hit the dev proxy
+```
+
+See [.env.example](.env.example) for placeholders.
