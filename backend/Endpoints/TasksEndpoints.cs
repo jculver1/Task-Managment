@@ -35,5 +35,31 @@ public static class TasksEndpoints
         })
         .WithSummary("Create a new task");
 
+    group.MapPut("/{id}", async (int id, TaskItem updatedTask, AppDbContext db) =>
+        {
+            var task = await db.Tasks.FindAsync(id);
+            if (task == null)
+                return Results.NotFound();
+
+            task.Title = updatedTask.Title;
+            task.Description = updatedTask.Description;
+            task.IsComplete = updatedTask.IsComplete;
+
+            await db.SaveChangesAsync();
+            return Results.Ok(task);
+        })
+        .WithSummary("Update an existing task");
+
+        group.MapDelete("/{id}", async (int id, AppDbContext db) =>
+        {
+            var task = await db.Tasks.FindAsync(id);
+            if (task == null)
+                return Results.NotFound();
+
+            db.Tasks.Remove(task);
+            await db.SaveChangesAsync();
+            return Results.NoContent();
+        })
+        .WithSummary("Delete a task");
     }
 }
